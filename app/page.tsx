@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { RegistrationForm } from '../components/auth/RegistrationForm'
 import { HeroSection } from '../components/auth/HeroSection'
