@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react'
 import { InputField } from '../ui/input-field'
+import Link from 'next/link'
 
 export const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -67,9 +68,9 @@ export const RegistrationForm: React.FC = () => {
           <span>Prometemos nada com nada.</span>
           <span className="text-sm block mt-1">
             Já tem conta? Faça login
-            <a href="#" className="text-[#292929] underline ml-1">
+            <Link href="/sign-in" className="text-[#292929] underline ml-1">
               aqui
-            </a>
+            </Link>
             .
           </span>
         </p>
