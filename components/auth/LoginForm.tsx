@@ -52,10 +52,13 @@ export default function LoginForm() {
             Pronto para se arrepender?
           </h1>
           <p className="text-[#292929] text-xl font-normal">
-            Se conseguir entrar, parabéns.<br /> Não tem uma conta? Crie
+            Se conseguir entrar, parabéns.<br/> 
+            <span className="text-sm block mt-1">
+            Não tem uma conta? Crie 
             <Link href="/sign-up" className="text-[#292929] underline ml-1">
               aqui
             </Link>
+            </span>
           </p>
         </div>
 
