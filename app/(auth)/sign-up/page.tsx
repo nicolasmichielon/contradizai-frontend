@@ -1,12 +1,3 @@
-// import AuthForm from "@/components/AuthForm";
-
-// const Page = () => {
-//   return <AuthForm type="sign-up" />;
-// };
-
-// export default Page;
-
-
 import React from 'react'
 import { RegistrationForm } from '../../../components/auth/RegistrationForm'
 import { HeroSection } from '../../../components/auth/HeroSection'

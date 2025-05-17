@@ -1,31 +1,47 @@
 "use client";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import React, { useState } from "react";
 import { InputField } from "@/components/ui/input-field";
-import { cn } from "@/lib/utils"; // If you use a classnames utility
 import Link from "next/link";
-
-const loginSchema = z.object({
-  username: z.string().min(1, { message: "Usuário é obrigatório" }),
-  password: z.string().min(6, { message: "Senha deve ter pelo menos 6 caracteres" }),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { loginUser } from "@/lib/actions/auth.action";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { username: "", password: "" },
-  });
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    confirmPassword: '',
+  })
 
-  const onSubmit = (data: LoginFormValues) => {
-    console.log("Form submitted:", data);
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+    confirmPassword: '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+
+    if (errors[name as keyof typeof errors]) {
+      setErrors(prev => ({ ...prev, [name]: '' }))
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const username = formData.username
+    const password = formData.password
+    try {
+      const userData = await loginUser(username, password);
+
+      localStorage.setItem('token', userData.token);
+      localStorage.setItem('user', JSON.stringify(userData.user));
+
+      router.push('/');
+    } catch (err: any) {
+      alert("falha no login:" + err)
+    }
   };
 
   return (
@@ -36,37 +52,34 @@ export default function LoginForm() {
             Pronto para se arrepender?
           </h1>
           <p className="text-[#292929] text-xl font-normal">
-            Se conseguir entrar, parabéns.<br/> Não tem uma conta? Crie 
+            Se conseguir entrar, parabéns.<br /> Não tem uma conta? Crie
             <Link href="/sign-up" className="text-[#292929] underline ml-1">
               aqui
             </Link>
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5 w-full">
             <InputField
-              {...register("username")}
+              type="text"
+              name="username"
               placeholder="Usuário"
-              className={cn(
-                "text-[#5F5F5F] text-base font-normal leading-6 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white p-4 rounded-lg border-solid border-[#EFEFEF]",
-                errors.username && "border-red-500"
-              )}
+              value={formData.username}
+              onChange={handleChange}
+              error={errors.username}
             />
-            {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
           </div>
 
           <div className="flex flex-col gap-1.5 w-full">
             <InputField
-              {...register("password")}
               type="password"
+              name="password"
               placeholder="Senha"
-              className={cn(
-                "text-[#5F5F5F] text-base font-normal leading-6 border shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] bg-white p-4 rounded-lg border-solid border-[#EFEFEF]",
-                errors.password && "border-red-500"
-              )}
+              value={formData.password}
+              onChange={handleChange}
+              error={errors.password}
             />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
 
           <button
@@ -81,7 +94,7 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="w-48 h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl flex items-center justify-center"
+            className="w-48 h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl flex items-center justify-center cursor-pointer"
           >
             Entrar
           </button>

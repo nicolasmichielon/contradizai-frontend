@@ -1,14 +1,24 @@
-async function Home() {
+'use client';
 
-  return (
-    <>
-      <section className="card-cta">
-        <div className="flex flex-col gap-6 max-w-lg">
-          <h2>ContradizAI</h2>
-        </div>
-      </section>
-    </>
-  );
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userInfo = localStorage.getItem('user');
+
+    if (!token || !userInfo) {
+      router.push('/sign-in');
+    } else {
+      setUser(JSON.parse(userInfo));
+    }
+  }, []);
+
+  if (!user) return <p>Carregando...</p>;
+
+  return <h1>Bem-vindo, {user.username}!</h1>;
 }
-
-export default Home;

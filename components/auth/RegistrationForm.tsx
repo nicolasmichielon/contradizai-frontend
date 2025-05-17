@@ -2,8 +2,12 @@
 import React, { useState } from 'react'
 import { InputField } from '../ui/input-field'
 import Link from 'next/link'
+import { signUpUser } from '@/lib/actions/auth.action';
+import { loginUser } from '@/lib/actions/auth.action';
+import { useRouter } from 'next/navigation';
 
 export const RegistrationForm: React.FC = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -51,12 +55,25 @@ export const RegistrationForm: React.FC = () => {
     return valid
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (validateForm()) {
-      console.log('Form submitted:', formData)
+      const username = formData.username
+      const password = formData.password
+      try {
+        await signUpUser(username, password); // cadastra
+        const userData = await loginUser(username, password); // login automático
+
+        localStorage.setItem('token', userData.token); // ou use cookies
+        localStorage.setItem('user', JSON.stringify(userData.user));
+
+        router.push('/');
+      } catch (err: any) {
+        setErrors(err.message);
+      }
     }
   }
+
 
   return (
     <section className="flex flex-col items-start gap-[30px] flex-1 min-w-[320px] max-w-[450px] py-12 px-4">
@@ -76,7 +93,7 @@ export const RegistrationForm: React.FC = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+      <form onSubmit={handleRegister} className="flex flex-col gap-4 w-full">
         <InputField
           type="text"
           name="username"
@@ -106,7 +123,7 @@ export const RegistrationForm: React.FC = () => {
 
         <button
           type="submit"
-          className="w-48 h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl hover:bg-[#141b3d] transition-colors"
+          className="w-48 h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl hover:bg-[#141b3d] transition-colors cursor-pointer"
         >
           Cadastrar
         </button>
