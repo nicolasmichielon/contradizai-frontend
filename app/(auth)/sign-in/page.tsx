@@ -1,7 +1,7 @@
 
 import React from 'react'
-import { RegistrationForm } from '../components/auth/RegistrationForm'
-import { HeroSection } from '../components/auth/HeroSection'
+import { RegistrationForm } from '../../../components/auth/RegistrationForm'
+import { HeroSection } from '../../../components/auth/HeroSection'
 
 export default function Home() {
   return (
