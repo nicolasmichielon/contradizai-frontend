@@ -58,7 +58,7 @@ export const RegistrationForm: React.FC = () => {
   }
 
   return (
-    <section className="flex flex-col items-start gap-[30px] w-[497px] pt-[355px] max-md:w-[90%] max-md:max-w-[497px] max-md:pt-10">
+    <section className="flex flex-col items-start gap-[30px] flex-1 min-w-[320px] max-w-[450px] py-12 px-4">
       <div className="flex flex-col items-start gap-4 w-full">
         <h1 className="text-[#1B2559] text-4xl font-normal">
           Cadastre-se gratuitamente

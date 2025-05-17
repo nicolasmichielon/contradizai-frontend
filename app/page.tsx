@@ -1,14 +1,17 @@
-
 import React from 'react'
 import { RegistrationForm } from '../components/auth/RegistrationForm'
 import { HeroSection } from '../components/auth/HeroSection'
 
 export default function Home() {
   return (
-    <main className="flex justify-center items-center min-h-screen bg-white">
-      <div className="flex w-full max-w-[1846px] justify-center items-center gap-[323px] max-md:flex-col max-md:gap-[60px]">
-        <RegistrationForm />
-        <HeroSection />
+    <main className="flex w-full h-screen bg-white">
+      <div className="flex w-full h-full">
+        <div className="flex flex-col flex-1 h-full items-start justify-start pl-32 pt-16">
+          <RegistrationForm />
+        </div>
+        <div className="w-[50vw] h-full">
+          <HeroSection />
+        </div>
       </div>
     </main>
   )
