@@ -5,16 +5,18 @@ import { ReactNode } from "react";
 //import { isAuthenticated } from "@/lib/actions/auth.action";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
+  //const isUserAuthenticated = await isAuthenticated();
+  //if (!isUserAuthenticated) redirect("/sign-in");
+  //redirect("/sign-up");
 
   return (
-    <div className="root-layout">
-      <nav>
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="MockMate Logo" width={38} height={32} />
-          <h2 className="text-primary-100">PrepWise</h2>
+    <div className="root-layout relative w-full h-full">
+      {/* Absolutely/fixed positioned logo in the top right */}
+      <div className="fixed top-4 right-4 flex flex-col items-center z-50">
+        <Link href="/" className="flex flex-col items-center">
+          <Image src="/next.svg" alt="ContradizAI Logo" width={64} height={56} />
         </Link>
-      </nav>
-
+      </div>
       {children}
     </div>
   );

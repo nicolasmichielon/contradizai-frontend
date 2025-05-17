@@ -1,4 +1,6 @@
 'use client';
+import { ChatLayout } from "@/components/chat/ChatLayout";
+
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -20,5 +22,5 @@ export default function DashboardPage() {
 
   if (!user) return <p>Carregando...</p>;
 
-  return <h1>Bem-vindo, {user.username}!</h1>;
+  return <ChatLayout />;
 }
