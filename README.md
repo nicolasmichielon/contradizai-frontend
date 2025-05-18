@@ -61,10 +61,11 @@ yarn dev
 
 Acesse o projeto em http://localhost:3000 ou na porta que estiver usando para rodar o projeto
 
+</br>
+🖼️ Veja um pouco do nosso design
+https://www.figma.com/proto/S938LYCf1pcyfoHjIfwmxj/Untitled?page-id=0%3A1&node-id=10-289&viewport=93%2C-1135%2C0.18&t=tI8oI5lj0sM1sx3v-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=10%3A289
+</br>
 
-📸 Screenshots
-Show Image
-Show Image
 🤝 Como Contribuir
 
 Faça um fork do projeto</br>
