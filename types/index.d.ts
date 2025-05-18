@@ -10,3 +10,13 @@ interface formData {
     confirmPassword?: string;
 };
 
+interface Chat {
+    id: string;
+    name: string;
+    userId: string;
+}
+
+interface SidebarProps {
+    selectedChatId: string;
+    setSelectedChatId: (id: string) => void;
+}

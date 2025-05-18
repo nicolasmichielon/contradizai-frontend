@@ -8,7 +8,7 @@ export const ChatLayout: React.FC = () => {
   const [selectedChatId, setSelectedChatId] = useState<string>("");
 
   return (
-    <div className="flex gap-[53px] h-screen">
+    <div className="flex p-4 gap-[53px] h-screen bg-white">
       <Sidebar
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}

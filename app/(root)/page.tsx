@@ -16,7 +16,7 @@ export default function DashboardPage() {
     } else {
       setUser(JSON.parse(userInfo));
     }
-  }, []);
+  }, [router]);
 
   if (!user) return <p>Carregando...</p>;
 

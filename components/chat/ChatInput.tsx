@@ -26,7 +26,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           placeholder="Send a message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="flex-1 h-[54px] border border-slate-200 text-sm px-5 rounded-[45px]"
+          className="flex-1 h-[54px] border border-slate-200 text-sm text-[#292929] px-5 rounded-[45px] focus:outline-1"
           aria-label="Message input"
         />
         <button

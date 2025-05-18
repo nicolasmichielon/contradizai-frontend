@@ -1,4 +1,3 @@
-// src/components/chat/ChatArea.tsx
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { ChatInput } from "./ChatInput";
