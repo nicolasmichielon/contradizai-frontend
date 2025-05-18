@@ -30,6 +30,7 @@ export const ChatLayout: React.FC = () => {
         selectedChatId={selectedChatId}
         setSelectedChatId={setSelectedChatId}
         chats={chats}
+        setChatslist={setChats}
 
       />
       <ChatArea

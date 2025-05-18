@@ -20,6 +20,7 @@ interface SidebarProps {
     selectedChatId: string;
     setSelectedChatId: (id: string) => void;
     chats: Chat[];
+    setChatslist: (chats: Chat[]) => void;
 }
 
 interface Message {
