@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedCha
             className={`text-[#1B2559] text-sm py-2 px-2 rounded-lg hover:bg-[#F3F4F6] text-left ${selectedChatId === chat.id ? "bg-[#E9EDF7]" : ""
               }`}
           >
-            {chat.name || "Chat"}
+            {chat.title || "Chat"}
           </button>
         ))}
       </nav>
