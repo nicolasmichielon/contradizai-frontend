@@ -83,7 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, chats, setSele
               onClick={() => setSelectedChatId(chat.id)}
               className="flex-1 text-[#1B2559] text-sm text-left truncate"
             >
-              {chat.name || "Chat"}
+              {chat.title || "Chat"}
             </button>
             <button
               aria-label="Excluir chat"
