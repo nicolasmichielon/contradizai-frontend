@@ -3,7 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUsernameFromToken, getUserIdFromToken } from "@/utils/auth";
 import { Icon } from "@iconify/react";
-import { createChat, getChats } from '@/lib/actions/general.action'
+import { createChat, getChats } from '@/lib/actions/general.action';
+
+interface Chat {
+  id: string;
+  name: string;
+}
+
+interface SidebarProps {
+  selectedChatId: string;
+  setSelectedChatId: (id: string) => void;
+}
 
 export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedChatId }) => {
   const [username, setUsername] = useState<string | null>(null);
@@ -22,36 +32,67 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedCha
   // Fetch chats for authenticated user
   useEffect(() => {
     const fetchChats = async () => {
-      const token = localStorage.getItem("token") || ""
+      const token = localStorage.getItem("token") || "";
       const userId = getUserIdFromToken();
       if (!userId) {
         console.error("Usuário não autenticado");
         return;
       }
-      const data = await getChats(userId, token) || []
-        setChats(data);
-        if (data.length && !selectedChatId) {
-          setSelectedChatId(data[0].id);
-        }
+      const data = await getChats(userId, token) || [];
+      setChats(data);
+      if (data.length && !selectedChatId) {
+        setSelectedChatId(data[0].id);
+      }
     };
     fetchChats();
-  }, [selectedChatId, setSelectedChatId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setSelectedChatId]);
 
   const handleCreateChat = async () => {
-    const token = localStorage.getItem("token") || ""
-    const userId = getUserIdFromToken();
-    if (!userId) {
-      console.error("Usuário não autenticado");
-      return;
-    }
+  const token = localStorage.getItem("token") || "";
+  const userId = getUserIdFromToken();
+  if (!userId) {
+    console.error("Usuário não autenticado");
+    return;
+  }
+  try {
+    const chat = await createChat(userId, token);
+    console.log("Chat criado:", chat); // <-- ADICIONE ISSO
+    setChats(prev => [chat!, ...prev]);
+    setSelectedChatId(chat!.id);
+  } catch (err) {
+    console.error('Erro ao criar chat:', err); // <-- MELHORE AQUI
+  }
+};
+
+
+  const handleDeleteChat = async (chatId: string) => {
     try {
-      const chat = await createChat(userId, token)
-      setChats(prev => [chat!, ...prev]);
-      setSelectedChatId(chat!.id);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat/delete/${chatId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const respText = await res.text();
+      console.log('Status:', res.status, 'Body:', respText); // <-- ADICIONE ISSO
+
+      if (!res.ok) {
+        throw new Error('Erro ao deletar chat');
+      }
+
+      setChats(prev => prev.filter(c => c.id !== chatId));
+      const filtered = chats.filter(c => c.id !== chatId);
+      if (selectedChatId === chatId) {
+        setSelectedChatId(filtered.length ? filtered[0].id : "");
+      }
     } catch (err) {
       console.error(err);
     }
   };
+
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -82,14 +123,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedCha
           </button>
         </div>
         {chats.map(chat => (
-          <button
+          <div
             key={chat.id}
-            onClick={() => setSelectedChatId(chat.id)}
-            className={`text-[#1B2559] text-sm py-2 px-2 rounded-lg hover:bg-[#F3F4F6] text-left ${selectedChatId === chat.id ? "bg-[#E9EDF7]" : ""
-              }`}
+            className={`flex items-center justify-between group rounded-lg px-2 py-2 hover:bg-[#F3F4F6] ${selectedChatId === chat.id ? "bg-[#E9EDF7]" : ""}`}
           >
-            {chat.name || "Chat"}
-          </button>
+            <button
+              onClick={() => setSelectedChatId(chat.id)}
+              className="flex-1 text-[#1B2559] text-sm text-left truncate"
+            >
+              {chat.name || "Chat"}
+            </button>
+            <button
+              aria-label="Excluir chat"
+              onClick={() => handleDeleteChat(chat.id)}
+              className="ml-2 opacity-60 group-hover:opacity-100 transition-opacity hover:text-red-500"
+            >
+              <Icon icon="tabler:trash" className="w-5 h-5" />
+            </button>
+          </div>
         ))}
       </nav>
 
