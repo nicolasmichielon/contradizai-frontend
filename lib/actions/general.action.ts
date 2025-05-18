@@ -10,7 +10,6 @@ export async function createChat(userId: string, token: string) {
         });
         if (!res.ok) throw new Error(`Failed to create chat: ${res.status}`);
         const newChat: Chat = await res.json();
-        console.log(res)
         return newChat
 
     } catch (err) {

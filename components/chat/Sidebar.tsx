@@ -1,13 +1,10 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getUsernameFromToken, getUserIdFromToken } from "@/utils/auth";
+import { getUsernameFromToken } from "@/utils/auth";
 import { Icon } from "@iconify/react";
-import { createChat, getChats } from '@/lib/actions/general.action'
 
-export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedChatId }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, chats, setSelectedChatId }) => {
   const [username, setUsername] = useState<string | null>(null);
-  const [chats, setChats] = useState<Chat[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,39 +16,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedCha
     setUsername(name);
   }, [router]);
 
-  // Fetch chats for authenticated user
-  useEffect(() => {
-    const fetchChats = async () => {
-      const token = localStorage.getItem("token") || ""
-      const userId = getUserIdFromToken();
-      if (!userId) {
-        console.error("Usuário não autenticado");
-        return;
-      }
-      const data = await getChats(userId, token) || []
-        setChats(data);
-        if (data.length && !selectedChatId) {
-          setSelectedChatId(data[0].id);
-        }
-    };
-    fetchChats();
-  }, [selectedChatId, setSelectedChatId]);
-
-  const handleCreateChat = async () => {
-    const token = localStorage.getItem("token") || ""
-    const userId = getUserIdFromToken();
-    if (!userId) {
-      console.error("Usuário não autenticado");
-      return;
-    }
-    try {
-      const chat = await createChat(userId, token)
-      setChats(prev => [chat!, ...prev]);
-      setSelectedChatId(chat!.id);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const handleOpenNewChat = () => {
+    setSelectedChatId("")
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -75,7 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, setSelectedCha
           <div className="text-xs font-semibold text-[#6B7280] uppercase">Chats</div>
           <button
             aria-label="Create Chat"
-            onClick={handleCreateChat}
+            onClick={handleOpenNewChat}
             className="group text-[#1B2559] text-xl font-bold hover:text-[#374151]"
           >
             <Icon icon="tabler:plus" className="text-gray-600 group-hover:text-[#846EE3] transition-colors duration-100 cursor-pointer" />

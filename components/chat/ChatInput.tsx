@@ -1,10 +1,5 @@
-// src/components/chat/ChatInput.tsx
 "use client";
 import React, { useState } from "react";
-
-interface ChatInputProps {
-  onSendMessage: (message: string) => void;
-}
 
 export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");

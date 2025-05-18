@@ -3,20 +3,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChatInput } from "./ChatInput";
 import { SuggestionChips } from "./SuggestionChips";
 import { getUserIdFromToken } from "@/utils/auth";
+import { createChat } from "@/lib/actions/general.action";
 
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "bot";
-  timestamp: Date;
-}
-
-interface ChatAreaProps {
-  chatId: string;
-  setChatId: (id: string) => void;
-}
-
-export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
+export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats, setSelectedChatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -70,6 +59,22 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
     }
   }, [messages]);
 
+  // const handleCreateChat = async (message: string) => {
+  //   const token = localStorage.getItem("token") || ""
+  //   const userId = getUserIdFromToken();
+  //   if (!userId) {
+  //     console.error("Usuário não autenticado");
+  //     return;
+  //   }
+  //   try {
+  //     const chat = await createChat(userId, token, message)
+  //     setChats(prev => [chat!, ...prev]);
+  //     setSelectedChatId(chat!.id);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
   // Handle sending message
   const handleSendMessage = async (text: string) => {
     let usedChatId = chatId;
@@ -87,65 +92,72 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
           "Content-Type": "application/json",
           authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId, firstMessage: text }),
       });
       const data = await res.json();
-      if (!data || !data.id) {
-        alert("Erro: resposta inesperada da API ao criar chat: " + JSON.stringify(data));
+      const chatdata = data.chat
+      if (!chatdata || !chatdata.id) {
+        alert("Erro: resposta inesperada da API ao criar chat: " + JSON.stringify(chatdata));
         return;
       }
-      usedChatId = data.id;
-      setChatId(data.id);
-    }
+      usedChatId = chatdata.id;
+      setChatId(chatdata.id);
 
-    // Optimistically add user's message
-    setMessages((prev) => [
-      ...prev,
-      { id: Date.now(), text, sender: "user", timestamp: new Date() },
-    ]);
+      // Optimistically add user's message
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), text, sender: "user", timestamp: new Date() },
+      ]);
+    } else {
+      // Optimistically add user's message
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now(), text, sender: "user", timestamp: new Date() },
+      ]);
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ chatId: usedChatId, sender: "user", text }),
-      });
-      if (!res.ok) {
-        console.error("API error", res.status, await res.text());
-        return;
-      }
-
-      // Always re-fetch messages after send to guarantee sync with backend:
-      const fetchMessages = async () => {
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message/chat/${usedChatId}`, {
-            headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
-          });
-          if (!res.ok) throw new Error(`Failed to fetch messages: ${res.status}`);
-          const data = await res.json();
-          setMessages(
-          data.map((m: any) => ({
-            id: m.id,
-            text: m.text,
-            sender: m.sender === "user" ? "user" : "bot",
-            timestamp:
-              m.timestamp && !isNaN(Date.parse(m.timestamp))
-                ? new Date(m.timestamp)
-                : new Date(),
-          }))
-        );
-
-        } catch (err) {
-          console.error("Error loading messages:", err);
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ chatId: usedChatId, sender: "user", text }),
+        });
+        if (!res.ok) {
+          console.error("API error", res.status, await res.text());
+          return;
         }
-      };
-      await fetchMessages();
 
-    } catch (err) {
-      console.error("Failed to fetch bot reply:", err);
+        // Always re-fetch messages after send to guarantee sync with backend:
+        const fetchMessages = async () => {
+          try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message/chat/${usedChatId}`, {
+              headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
+            if (!res.ok) throw new Error(`Failed to fetch messages: ${res.status}`);
+            const data = await res.json();
+            setMessages(
+              data.map((m: any) => ({
+                id: m.id,
+                text: m.text,
+                sender: m.sender === "user" ? "user" : "bot",
+                timestamp:
+                  m.timestamp && !isNaN(Date.parse(m.timestamp))
+                    ? new Date(m.timestamp)
+                    : new Date(),
+              }))
+            );
+
+          } catch (err) {
+            console.error("Error loading messages:", err);
+          }
+        };
+        await fetchMessages();
+
+      } catch (err) {
+        console.error("Failed to fetch bot reply:", err);
+      }
     }
   };
 
@@ -169,11 +181,10 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
               className={`mb-4 ${m.sender === "user" ? "text-right" : "text-left"}`}
             >
               <div
-                className={`inline-block p-4 rounded-[14px] max-w-[70%] ${
-                  m.sender === "user"
-                    ? "bg-[#800080] text-white"
-                    : "bg-gray-100 text-[#1B2559]"
-                }`}
+                className={`inline-block p-4 rounded-[14px] max-w-[70%] ${m.sender === "user"
+                  ? "bg-[#800080] text-white"
+                  : "bg-gray-100 text-[#1B2559]"
+                  }`}
               >
                 {m.text}
               </div>
