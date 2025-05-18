@@ -20,6 +20,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, chats, setSele
     setSelectedChatId("")
   }
 
+
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/sign-in");
@@ -49,14 +51,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, chats, setSele
           </button>
         </div>
         {chats.map(chat => (
-          <button
+          <div
             key={chat.id}
-            onClick={() => setSelectedChatId(chat.id)}
-            className={`text-[#1B2559] text-sm py-2 px-2 rounded-lg hover:bg-[#F3F4F6] text-left ${selectedChatId === chat.id ? "bg-[#E9EDF7]" : ""
-              }`}
+            className={`flex items-center justify-between group rounded-lg px-2 py-2 hover:bg-[#F3F4F6] ${selectedChatId === chat.id ? "bg-[#E9EDF7]" : ""}`}
           >
-            {chat.name || "Chat"}
-          </button>
+            <button
+              onClick={() => setSelectedChatId(chat.id)}
+              className="flex-1 text-[#1B2559] text-sm text-left truncate"
+            >
+              {chat.name || "Chat"}
+            </button>
+            <button
+              aria-label="Excluir chat"
+              onClick={() => handleDeleteChat(chat.id)}
+              className="ml-2 opacity-60 group-hover:opacity-100 transition-opacity hover:text-red-500"
+            >
+              <Icon icon="tabler:trash" className="w-5 h-5" />
+            </button>
+          </div>
         ))}
       </nav>
 
