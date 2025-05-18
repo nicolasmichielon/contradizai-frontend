@@ -16,7 +16,7 @@ export const SuggestionChips: React.FC<SuggestionChipsProps> = ({
       text: "Qual a melhor forma de impressionar numa entrevista de emprego?",
     },
   ];
-
+  
   return (
     <div className="flex gap-2.5 w-full justify-center max-md:flex-col max-md:items-center max-sm:px-[15px] max-sm:py-0">
       {suggestions.map((suggestion, index) => (

@@ -3,9 +3,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChatInput } from "./ChatInput";
 import { SuggestionChips } from "./SuggestionChips";
 import { getUserIdFromToken } from "@/utils/auth";
-import { createChat } from "@/lib/actions/general.action";
 
-export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats, setSelectedChatId }) => {
+interface Message {
+  id: number;
+  text: string;
+  sender: "user" | "bot";
+  created_at: Date;
+}
+
+interface ChatAreaProps {
+  chatId: string;
+  setChatId: (id: string) => void;
+}
+
+export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,7 +50,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
             id: m.id,
             text: m.text,
             sender: m.sender === "user" ? "user" : "bot",
-            timestamp: new Date(m.timestamp),
+            created_at: new Date(m.created_at),
           }))
         );
       } catch (err) {
@@ -58,22 +69,6 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
-
-  // const handleCreateChat = async (message: string) => {
-  //   const token = localStorage.getItem("token") || ""
-  //   const userId = getUserIdFromToken();
-  //   if (!userId) {
-  //     console.error("Usuário não autenticado");
-  //     return;
-  //   }
-  //   try {
-  //     const chat = await createChat(userId, token, message)
-  //     setChats(prev => [chat!, ...prev]);
-  //     setSelectedChatId(chat!.id);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
   // Handle sending message
   const handleSendMessage = async (text: string) => {
@@ -106,13 +101,13 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
       // Optimistically add user's message
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), text, sender: "user", timestamp: new Date() },
+        { id: Date.now(), text, sender: "user", created_at: new Date() },
       ]);
     } else {
       // Optimistically add user's message
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), text, sender: "user", timestamp: new Date() },
+        { id: Date.now(), text, sender: "user", created_at: new Date() },
       ]);
 
       try {
@@ -128,37 +123,38 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
           console.error("API error", res.status, await res.text());
           return;
         }
-
-        // Always re-fetch messages after send to guarantee sync with backend:
-        const fetchMessages = async () => {
-          try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message/chat/${usedChatId}`, {
-              headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
-            });
-            if (!res.ok) throw new Error(`Failed to fetch messages: ${res.status}`);
-            const data = await res.json();
-            setMessages(
-              data.map((m: any) => ({
-                id: m.id,
-                text: m.text,
-                sender: m.sender === "user" ? "user" : "bot",
-                timestamp:
-                  m.timestamp && !isNaN(Date.parse(m.timestamp))
-                    ? new Date(m.timestamp)
-                    : new Date(),
-              }))
-            );
-
-          } catch (err) {
-            console.error("Error loading messages:", err);
-          }
-        };
-        await fetchMessages();
-
       } catch (err) {
-        console.error("Failed to fetch bot reply:", err);
+        console.error("Error sending message:", err);
       }
     }
+  }
+
+  // Always re-fetch messages after send to guarantee sync with backend:
+  const fetchMessages = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/message/chat/${chatId}`, {
+        headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (!res.ok) throw new Error(`Failed to fetch messages: ${res.status}`);
+      const data = await res.json();
+      setMessages(
+        data.map((m: any) => ({
+          id: m.id,
+          text: m.text,
+          sender: m.sender === "user" ? "user" : "bot",
+          created_at:
+            m.created_at && !isNaN(Date.parse(m.created_at))
+              ? new Date(m.created_at)
+              : new Date(),
+        }))
+      );
+
+    } catch (err) {
+      console.error("Error loading messages:", err);
+
+
+    }
+    await fetchMessages();
   };
 
   return (
@@ -189,7 +185,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
                 {m.text}
               </div>
               <div className="text-[10px] text-gray-400">
-                {m.timestamp.toLocaleTimeString()}
+                {m.created_at.toLocaleTimeString()}
               </div>
             </div>
           ))}
@@ -204,4 +200,4 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId, setChats,
       </div>
     </main>
   );
-};
+}
