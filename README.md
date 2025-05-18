@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![ContradizAi Logo](https://github.com/nicolasmichielon/contradizai-frontend/blob/master/public/herosection_robot.png?raw=true)
+# ContradizAi 🤖💬
 
-## Getting Started
+**Um chat com uma IA que te responde de forma absurda!**
 
-First, run the development server:
+## 🚀 Sobre o Projeto
+
+ContradizAi é uma aplicação web divertida que permite aos usuários interagir com uma inteligência artificial que propositalmente responde de maneira absurda e contraditória. Este projeto foi desenvolvido durante o Hackathon Condecon no dia 17 de maio de 2025.
+
+A ideia principal do ContradizAi é oferecer uma experiência humorística onde os usuários podem fazer perguntas e receber respostas inesperadas e contraditórias, gerando situações engraçadas e surpreendentes.
+
+## 🛠️ Tecnologias Utilizadas
+
+- [Next.js 15](https://nextjs.org/) - Framework React para desenvolvimento frontend
+- [React](https://reactjs.org/) - Biblioteca JavaScript para construção de interfaces
+- [TypeScript](https://www.typescriptlang.org/) - Superset tipado de JavaScript
+- [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utilitário
+
+## ✨ Funcionalidades
+
+- Interface de chat amigável e responsiva
+- Processamento de linguagem natural para entender as perguntas dos usuários
+- Geração de respostas contraditórias e absurdas
+- Histórico de conversas
+- Cadastro e login
+
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+
+- Node.js 20.x ou superior
+- npm ou yarn
+
+### Instalação e Execução
+
+1. Clone o repositório:
+```bash
+git clone [https://github.com/seu-usuario/contradizai.git](https://github.com/nicolasmichielon/contradizai-frontend.git)
+cd contradizai-frontend
+```
+Instale as dependências:
+
+```bash
+
+npm install
+# ou
+yarn install
+```
+Configure as variáveis de ambiente:
+Crie um arquivo .env na raiz do projeto e adicione as seguintes variáveis:
+
+NEXT_PUBLIC_API_URL=sua_url_da_api
+
+Execute o projeto em modo de desenvolvimento:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse o projeto em http://localhost:3000 ou na porta que estiver usando para rodar o projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+📸 Screenshots
+Show Image
+Show Image
+🤝 Como Contribuir
 
-## Learn More
+Faça um fork do projeto</br>
+Crie uma branch para sua feature (git checkout -b feature/nova-feature)</br>
+Faça commit das suas alterações (git commit -m 'Adiciona nova feature')</br>
+Faça push para a branch (git push origin feature/nova-feature)</br>
+Abra um Pull Request</br>
 
-To learn more about Next.js, take a look at the following resources:
+🏆 Hackathon Condecon</br>
+Este projeto foi desenvolvido durante o Hackathon Condecon realizado entre 17 e 18 de maio de 2025. Uma experiência incrível de aprendizado, networking e muita inovação!</br>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+📝 Licença</br>
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.</br>
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+👨‍💻 Autor
+Desenvolvido por: </br>
+Nícolas Michielon Cunha </br>
+Nicholas Jasper </br>
+Nicholas Derham </br>
+Richard de Souza Bercheli
