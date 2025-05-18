@@ -1,5 +1,4 @@
 import { Mona_Sans } from "next/font/google";
-
 import "./globals.css";
 import { Metadata } from "next";
 

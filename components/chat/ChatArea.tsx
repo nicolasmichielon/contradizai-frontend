@@ -11,10 +11,6 @@ interface Message {
   created_at: Date;
 }
 
-interface ChatAreaProps {
-  chatId: string;
-  setChatId: (id: string) => void;
-}
 
 export const ChatArea: React.FC<ChatAreaProps> = ({ chatId, setChatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);

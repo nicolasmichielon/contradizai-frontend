@@ -44,6 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ selectedChatId, chats, setSele
         }
 
         // Remover do state local
+        //@ts-ignore
         setChatslist((prev) => prev.filter((chat) => chat.id !== chatId));
         // (Opcional) Se o chat deletado era o selecionado, deselecione
         if (selectedChatId === chatId) setSelectedChatId("");
