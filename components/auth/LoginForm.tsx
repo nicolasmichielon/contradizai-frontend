@@ -4,9 +4,11 @@ import { InputField } from "@/components/ui/input-field";
 import Link from "next/link";
 import { loginUser } from "@/lib/actions/auth.action";
 import { useRouter } from "next/navigation";
+import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function LoginForm() {
   const router = useRouter();
+  const [loading, isLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -32,6 +34,7 @@ export default function LoginForm() {
     e.preventDefault();
     const username = formData.username
     const password = formData.password
+    isLoading(true)
     try {
       const userData = await loginUser(username, password);
 
@@ -40,6 +43,7 @@ export default function LoginForm() {
 
       router.push('/');
     } catch (err: any) {
+      isLoading(false)
       alert("falha no login:" + err)
     }
   };
@@ -88,7 +92,12 @@ export default function LoginForm() {
             type="submit"
             className=" h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl flex items-center justify-center cursor-pointer"
           >
-            Entrar
+            {
+              loading ?
+              <ClipLoader color="#ffffff" size={20} />
+              :
+              <p>Entrar</p>
+            }
           </button>
           <div className="mt-3 text-center">
             <p className="text-xs text-gray-600">
