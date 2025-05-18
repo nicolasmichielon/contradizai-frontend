@@ -52,13 +52,7 @@ export default function LoginForm() {
             Pronto para se arrepender?
           </h1>
           <p className="text-[#292929] text-xl font-normal">
-            Se conseguir entrar, parabéns.<br/> 
-            <span className="text-sm block mt-1">
-            Não tem uma conta? Crie 
-            <Link href="/sign-up" className="text-[#292929] underline ml-1">
-              aqui
-            </Link>
-            </span>
+            Se conseguir entrar, parabéns.<br />
           </p>
         </div>
 
@@ -83,24 +77,27 @@ export default function LoginForm() {
               onChange={handleChange}
               error={errors.password}
             />
+            <div className="mt-1 text-right">
+              <a href="/esqueceu-senha" className="text-xs text-blue-600 hover:underline">
+                Esqueceu sua senha? A gente também
+              </a>
+            </div>
           </div>
 
           <button
-            type="button"
-            className="text-black text-xl font-medium underline tracking-[0.6px] text-center mt-2"
-            onClick={() => console.log("Password reset requested")}
-          >
-            Esqueceu a sua senha? A gente também
-          </button>
-
-          <div className="w-full h-px bg-[#D2D2D2] my-2" />
-
-          <button
             type="submit"
-            className="w-48 h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl flex items-center justify-center cursor-pointer"
+            className=" h-[54px] text-white text-base font-semibold bg-[#1B2554] rounded-xl flex items-center justify-center cursor-pointer"
           >
             Entrar
           </button>
+          <div className="mt-3 text-center">
+            <p className="text-xs text-gray-600">
+              Não tem uma conta?{' '}
+              <Link href="/sign-up" className="text-blue-600 hover:underline">
+                Cadastre-se aqui
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </div>
